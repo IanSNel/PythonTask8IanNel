@@ -1,1 +1,39 @@
+# Author name : Ian Nel
+# Student ID  : XHYGGVQN89
+# This code uses the boto3 library to connect to the S3 service. Retieve a list of all the buckets in the AWS default region. 
+# First the script prompts the user to confirm if he wants to work in the default region, and if the answer is not "yes", the program terminates.
+# If the user confirms that he wants to use the default region, the script retrieves a list of all the buckets and display it on the console. 
+# The user then have the option to save the result to a textfile by specifying a file name.
+# Date written: 10/02/2023
+
+import boto3
+import sys
+
+# Prompt the user to confirm if the AWS default region should be accessed 
+confirm = input("Do you want to use your AWS default region? (yes/no)")
+
+if confirm.lower() != "yes":
+    sys.exit("Exiting program.")
+
+# Connect to the S3 service
+s3 = boto3.resource("s3")
+
+# Retrieve a list of all buckets
+bucketsS3 = [bucket.name for bucket in s3.buckets.all()]
+
+# Display the list of buckets in the region in the console
+print("List of Buckets in your Region:")
+for bucket in bucketsS3:
+    print(" - " + bucket)
+
+# Pipe the result to a text file
+save_as_textfile = input("Do you want to save this list to a text file? (yes/no)")
+
+if save_as_textfile.lower() == "yes":
+    filename = input("Enter a name for the text file :")
+    with open(filename, "w") as f:
+        f.write("List of buckets in your Region:\n")
+        for bucket in bucketsS3:
+            f.write(" - " + bucket + "\n")
+    print(f"Bucket list saved as text file {filename}.")
 
